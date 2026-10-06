@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentence Transformation Practice</title>
+<style>
+:root{--blue:#2563eb;--green:#16a34a;--red:#dc2626;--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#64748b;--gold:#f59e0b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text);line-height:1.55}
+.container{max-width:900px;margin:auto;padding:18px}
+header{background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;border-radius:18px;padding:22px;margin-bottom:18px;box-shadow:0 8px 25px #0002}
+h1{margin:0 0 5px;font-size:25px}.subtitle{opacity:.92}
+.scorebox{position:sticky;top:8px;z-index:5;background:#fff;border-radius:14px;padding:12px 15px;margin-bottom:15px;box-shadow:0 4px 18px #0002;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.score{font-weight:700;font-size:18px;color:var(--blue)}
+button{border:0;border-radius:10px;padding:10px 15px;font-weight:700;cursor:pointer}
+.checkall{background:var(--blue);color:#fff}.reset{background:#e2e8f0;color:#1e293b}
+.card{background:var(--card);border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 3px 14px #00000012;border-left:5px solid var(--blue)}
+.qnum{font-weight:800;color:var(--blue);font-size:18px}
+.original{background:#eff6ff;border-radius:10px;padding:11px;margin:10px 0}
+.prompt{font-weight:700;margin:10px 0}
+.answer-row{display:flex;gap:8px;align-items:center}
+.answer{width:100%;padding:12px;border:2px solid #cbd5e1;border-radius:10px;font-size:16px;outline:none}
+.answer:focus{border-color:var(--blue)}
+.feedback{margin-top:10px;font-weight:700}.correct{color:var(--green)}.wrong{color:var(--red)}
+.model{display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:10px;margin-top:8px}
+.explain{background:#fff7ed;border-left:4px solid var(--gold);padding:12px;border-radius:8px;margin-top:10px}
+.explain b{color:#9a3412}.vi{background:#f8fafc;border-radius:10px;padding:10px;margin-top:10px}
+.guide{background:#fff;border-radius:16px;padding:18px;margin-top:18px;box-shadow:0 3px 14px #0001}
+.guide h2{margin-top:0;color:#7c3aed}table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #e2e8f0;padding:9px;text-align:left;vertical-align:top}th{background:#f1f5f9}
+.small{color:var(--muted);font-size:14px}
+@media(max-width:600px){.container{padding:10px}.card{padding:14px}h1{font-size:21px}.scorebox{flex-wrap:wrap}.answer-row{display:block}.answer{margin-bottom:8px}table{font-size:14px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>Sentence Transformation Practice</h1>
+<div class="subtitle">Complete the second sentence so that it has the same meaning as the first one.</div>
+</header>
+<div class="scorebox">
+<div class="score" id="score">Score: 0 / 10</div>
+<div><button class="checkall" onclick="checkAll()">Check All</button> <button class="reset" onclick="resetAll()">Reset</button></div>
+</div>
+<div id="questions"></div>
+<section class="guide">
+<h2>Structure Guide</h2>
+<table>
+<tr><th>Structure</th><th>How to use it</th><th>Vietnamese meaning</th></tr>
+<tr><td><b>have/has + adjective + noun</b></td><td>Describe someone's physical features.</td><td>có + tính từ + danh từ</td></tr>
+<tr><td><b>like + V-ing</b></td><td>Talk about hobbies or activities someone enjoys.</td><td>thích làm gì</td></tr>
+<tr><td><b>one of + possessive + adjective + plural noun</b></td><td>Say that someone is one member of a group.</td><td>một trong những ... của ai</td></tr>
+<tr><td><b>be interested in + V-ing</b></td><td>Say that someone is interested in an activity.</td><td>hứng thú với việc làm gì</td></tr>
+<tr><td><b>be + a/an + adjective + person</b></td><td>Describe a person's character.</td><td>là một người như thế nào</td></tr>
+<tr><td><b>have/has + adjective + noun</b></td><td>Describe hair, eyes, nose, etc.</td><td>có + đặc điểm ngoại hình</td></tr>
+<tr><td><b>not + adjective + and + adjective</b></td><td>Express that something does not have two stated qualities.</td><td>không ... và ...</td></tr>
+<tr><td><b>have/has + adjective + eyes</b></td><td>Describe the colour/size of someone's eyes.</td><td>có đôi mắt như thế nào</td></tr>
+<tr><td><b>Would you like to + V?</b></td><td>Make a polite invitation or offer.</td><td>Bạn có muốn ... không?</td></tr>
+<tr><td><b>have + very + adjective + plural noun</b></td><td>Describe people/things using an adjective.</td><td>có những người/vật rất ...</td></tr>
+</table>
+<p class="small">Tip: Focus on the key grammar pattern rather than translating every word literally.</p>
+</section>
+</div>
+<script>
+const data=[
+{n:1,original:"He has blonde hair and blue eyes.",prompt:"His hair is __________ and his eyes are __________.",answer:"His hair is blonde and his eyes are blue.",vi:"Anh ấy có mái tóc vàng và đôi mắt xanh.",explain:"Đổi từ <b>have + adjective + noun</b> sang <b>noun + be + adjective</b>. Vì “hair” và “eyes” trở thành chủ ngữ nên dùng <b>is/are</b>."},
+{n:2,original:"Lan’s hobbies are listening to music and reading comic books.",prompt:"Lan __________.",answer:"Lan likes listening to music and reading comic books.",vi:"Sở thích của Lan là nghe nhạc và đọc truyện tranh. → Lan thích nghe nhạc và đọc truyện tranh.",explain:"<b>hobby is/are + V-ing</b> có thể đổi thành <b>like + V-ing</b>. Giữ nguyên hai hoạt động <b>listening</b> và <b>reading</b>."},
+{n:3,original:"Brian is a close friend of mine.",prompt:"Brian is __________.",answer:"Brian is one of my close friends.",vi:"Brian là một người bạn thân của tôi. → Brian là một trong những người bạn thân của tôi.",explain:"Dùng cấu trúc <b>one of + my + adjective + plural noun</b>. Sau <b>one of</b> phải dùng danh từ số nhiều: <b>friends</b>."},
+{n:4,original:"My best friend likes playing football after school.",prompt:"My best friend is __________.",answer:"My best friend is interested in playing football after school.",vi:"Bạn thân nhất của tôi thích chơi bóng đá sau giờ học. → Bạn thân nhất của tôi hứng thú với việc chơi bóng đá sau giờ học.",explain:"<b>like + V-ing</b> có thể đổi sang <b>be interested in + V-ing</b>. Sau giới từ <b>in</b> dùng <b>V-ing</b>, không dùng động từ nguyên mẫu."},
+{n:5,original:"She does everything carefully.",prompt:"She is __________.",answer:"She is a careful person.",vi:"Cô ấy làm mọi thứ một cách cẩn thận. → Cô ấy là một người cẩn thận.",explain:"Trạng từ <b>carefully</b> được đổi sang tính từ <b>careful</b>. Dùng cấu trúc <b>be + a/an + adjective + person</b>."},
+{n:6,original:"Chi’s hair is long and black, and her nose is straight.",prompt:"Chi has __________.",answer:"Chi has long black hair and a straight nose.",vi:"Chi có mái tóc dài và đen, và mũi của cô ấy thẳng.",explain:"Gộp hai câu mô tả ngoại hình bằng <b>has + adjective + noun</b>. Thứ tự tính từ: <b>long black hair</b>; <b>a straight nose</b>."},
+{n:7,original:"Her hair is long and curly.",prompt:"Her hair isn’t __________.",answer:"Her hair isn't short and straight.",vi:"Tóc của cô ấy dài và xoăn. → Tóc của cô ấy không ngắn và thẳng.",explain:"Dùng dạng phủ định <b>isn't + adjective + and + adjective</b>. <b>long → not short</b>, <b>curly → not straight</b>."},
+{n:8,original:"His eyes are blue and big.",prompt:"He has __________.",answer:"He has blue and big eyes.",vi:"Mắt của anh ấy xanh và to. → Anh ấy có đôi mắt xanh và to.",explain:"Đổi <b>His eyes are + adjectives</b> thành <b>He has + adjectives + eyes</b>. Không cần thêm <b>a</b> trước <b>eyes</b> vì <b>eyes</b> là danh từ số nhiều."},
+{n:9,original:"Do you want to join our judo club?",prompt:"Would you like __________?",answer:"Would you like to join our judo club?",vi:"Bạn có muốn tham gia câu lạc bộ judo của chúng tôi không?",explain:"<b>Do you want to + V?</b> có thể đổi sang lời mời lịch sự <b>Would you like to + V?</b>."},
+{n:10,original:"My friends are very honest.",prompt:"I have __________.",answer:"I have very honest friends.",vi:"Bạn bè của tôi rất trung thực. → Tôi có những người bạn rất trung thực.",explain:"Đổi <b>My friends are + adjective</b> thành <b>I have + adjective + plural noun</b>. Trạng từ <b>very</b> đứng trước tính từ: <b>very honest</b>."}
+];
+const root=document.getElementById('questions');
+data.forEach(q=>{
+const card=document.createElement('div');card.className='card';
+card.innerHTML=`<div class="qnum">Question ${q.n}</div>
+<div class="original"><b>Original:</b> ${q.original}</div>
+<div class="prompt">${q.prompt}</div>
+<div class="answer-row"><input class="answer" id="a${q.n}" autocomplete="off" spellcheck="false" placeholder="Type your answer here..."><button class="checkall" onclick="checkOne(${q.n})">Check</button></div>
+<div class="feedback" id="f${q.n}"></div>
+<div class="model" id="m${q.n}"><b>Model answer:</b> ${q.answer}</div>
+<div class="vi"><b>Vietnamese:</b> ${q.vi}</div>
+<div class="explain"><b>Structure & explanation:</b> ${q.explain}</div>`;
+root.appendChild(card);
+});
+function norm(s){return s.toLowerCase().replace(/[’‘]/g,"'").replace(/[.,!?]/g,"").replace(/\s+/g," ").trim()}
+const done={};
+function checkOne(n){
+const q=data.find(x=>x.n===n),val=document.getElementById('a'+n).value,f=document.getElementById('f'+n),m=document.getElementById('m'+n);
+if(!val.trim()){f.innerHTML='<span class="wrong">Please enter an answer.</span>';return}
+if(norm(val)===norm(q.answer)){done[n]=true;f.innerHTML='<span class="correct">✓ Correct!</span>';m.style.display='block'}
+else{done[n]=false;f.innerHTML='<span class="wrong">✗ Not quite. Check the structure and try again.</span>';m.style.display='block'}
+updateScore();
+}
+function checkAll(){data.forEach(q=>checkOne(q.n))}
+function updateScore(){document.getElementById('score').textContent=`Score: ${data.filter(q=>done[q.n]===true).length} / ${data.length}`}
+function resetAll(){data.forEach(q=>{document.getElementById('a'+q.n).value='';document.getElementById('f'+q.n).innerHTML='';document.getElementById('m'+q.n).style.display='none';done[q.n]=undefined});updateScore();window.scrollTo({top:0,behavior:'smooth'})}
+</script>
+</body>
+</html>
